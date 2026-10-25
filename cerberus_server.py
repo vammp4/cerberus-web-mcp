@@ -28,15 +28,21 @@ if sys.platform == "win32":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace", line_buffering=True)
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace", line_buffering=True)
 
-from mcp.server.mcpserver import MCPServer
 from master_fetch.server import MasterFetchServer
 import trafilatura
 
-app = MCPServer(
-    name="cerberus-web",
-    version="2.1.0",
-    instructions="Cerberus Web MCP: Ultra low-token web intelligence, Cloudflare bypass, YouTube subtitles, and interactive browser automation."
-)
+try:
+    from mcp.server.fastmcp import FastMCP
+    app = FastMCP(
+        name="cerberus-web",
+        instructions="Cerberus Web MCP: Ultra low-token web intelligence, Cloudflare bypass, YouTube subtitles, and interactive browser automation."
+    )
+except ImportError:
+    from mcp.server.mcpserver import MCPServer
+    app = MCPServer(
+        name="cerberus-web",
+        instructions="Cerberus Web MCP: Ultra low-token web intelligence, Cloudflare bypass, YouTube subtitles, and interactive browser automation."
+    )
 
 hound_server = MasterFetchServer()
 URL_REGEX = re.compile(r'https?://[^\s<>"]+|www\.[^\s<>"]+')
